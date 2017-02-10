@@ -34,43 +34,11 @@ func (n *Node) IsLeaf() bool {
 // hash of the data
 func NewNode(data []byte) *Node {
 	n := &Node{Data: data}
-	sh := fastsha256.Sum256(data)
-	n.hash = sh[:]
+	if data == nil {
+		n.hash = make([]byte, 32)
+	} else {
+		sh := fastsha256.Sum256(data)
+		n.hash = sh[:]
+	}
 	return n
-}
-
-func generateLeafNodes(data [][]byte) []*Node {
-	l := len(data)
-	lnodes := make([]*Node, l)
-
-	for i, d := range data {
-		lnodes[i] = NewNode(d)
-	}
-
-	if (l % 2) != 0 {
-		return append(lnodes, lnodes[l-1])
-	}
-	return lnodes
-}
-
-// if ns is odd the last node is repeated.
-func generateParentLevel(ns []*Node) []*Node {
-	nodes := ns
-
-	if (len(ns) % 2) != 0 {
-		nodes = append(nodes, nodes[len(nodes)-1])
-	}
-
-	ln := len(nodes)
-	parent := make([]*Node, ln/2)
-
-	for i := 0; i < ln; i += 2 {
-		data := append(nodes[i].Hash(), nodes[i+1].Hash()...)
-		nn := NewNode(data)
-		nn.Left = nodes[i]
-		nn.Right = nodes[i+1]
-		parent[i/2] = nn
-	}
-
-	return parent
 }

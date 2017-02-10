@@ -27,6 +27,14 @@ func TestMerkleTreeEven(t *testing.T) {
 			}
 		}
 	}
+
+	if len(tree.Leafs()) != 10 {
+		t.Fatal("wrong leaves")
+	}
+
+	if tree.Root() == nil {
+		t.Fatal("root is nil")
+	}
 }
 
 func TestMerkleTreeOdd(t *testing.T) {
@@ -43,30 +51,8 @@ func TestMerkleTreeOdd(t *testing.T) {
 		}
 	}
 
-}
-
-func TestMerkleDiff(t *testing.T) {
-	pd := prepData(11)
-	src := GenerateTree(pd)
-
-	pd = prepData(5)
-	dst := GenerateTree(pd)
-
-	//slvl := len(src.levels) - len(dst.levels)
-
-	//dl:=dst.levels[slvl]
-
-	dumpTree(src)
-	fmt.Println("")
-	dumpTree(dst)
-
-}
-
-func dumpTree(t1 *Tree) {
-	for i, level := range t1.levels {
-		fmt.Println("Level", i)
-		for _, l := range level {
-			fmt.Println(" ", l)
-		}
+	if len(tree.Leafs()) != 12 {
+		t.Fatal("wrong leaves")
 	}
+
 }
